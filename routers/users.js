@@ -1,9 +1,26 @@
 const express = require("express");
 const db = require("../data/dbHelpers");
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
-router.route("/").get(async (req, res) => {
+const restricted = async (req, res, next) => {
+  const { username, password } = req.headers;
+  if (!username || !password)
+    return res.status(401).json({ error: "Bad credentials" });
+  try {
+    const user = await db.findBy({ username }).first();
+    if (!user || !bcrypt.compareSync(password, user.password))
+      return res.status(403).json({ error: "Bad credentials" });
+    next();
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Could not validate your login credentials" });
+  }
+};
+
+router.route("/").get(restricted, async (req, res) => {
   try {
     const users = await db.find();
     res.status(200).json(users);
