@@ -4,10 +4,16 @@ const find = () => {
   return db("users");
 };
 
-const findById = filter => {
+const findBy = filter => {
   return db("users").where(filter);
 };
 
+const addUser = user => {
+  return db("users").insert(user);
+};
+
 module.exports = {
-  find
+  find,
+  findBy,
+  addUser
 };
