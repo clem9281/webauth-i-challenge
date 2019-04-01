@@ -7,11 +7,11 @@ const router = express.Router();
 const restricted = async (req, res, next) => {
   const { username, password } = req.headers;
   if (!username || !password)
-    return res.status(401).json({ error: "Bad credentials" });
+    return res.status(401).json({ error: "You shall not pass!" });
   try {
     const user = await db.findBy({ username }).first();
     if (!user || !bcrypt.compareSync(password, user.password))
-      return res.status(403).json({ error: "Bad credentials" });
+      return res.status(403).json({ error: "You shall not pass!" });
     next();
   } catch (error) {
     res

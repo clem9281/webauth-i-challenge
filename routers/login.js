@@ -11,11 +11,11 @@ router.route("/").post(async (req, res) => {
   }
   try {
     const user = await db.findBy({ username }).first();
-    if (!user) return res.status(401).json({ error: "Bad credentials" });
+    if (!user) return res.status(401).json({ error: "You shall not pass!" });
     if (bcrypt.compareSync(password, user.password)) {
       return res.status(200).json({ message: "Successfully logged in" });
     }
-    return res.status(401).json({ error: "Bad credentials" });
+    return res.status(401).json({ error: "You shall not pass!" });
   } catch (error) {
     res
       .status(500)
