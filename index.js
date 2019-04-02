@@ -1,19 +1,18 @@
 const express = require("express");
 const helmet = require("helmet");
-// const register = require("./routers/register");
 const users = require("./routers/users");
-// const login = require("./routers/login");
 const auth = require("./routers/auth");
+const session = require("express-session");
+const sessionConfig = require("./routers/session-config");
 
 const app = express();
 
-app.use(express.json());
 app.use(helmet());
+app.use(express.json());
+app.use(session(sessionConfig));
 
 app.get("/", (req, res) => res.send("<h1>WebAuth I</h1>"));
-// app.use("/api/register", register);
 app.use("/api/users", users);
-// app.use("/api/login", login);
 app.use("/api/auth", auth);
 
 const port = process.env.PORT || 6500;

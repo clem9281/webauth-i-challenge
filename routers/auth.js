@@ -30,6 +30,7 @@ router.route("/login").post(async (req, res) => {
     const user = await db.findBy({ username }).first();
     if (!user) return res.status(401).json({ error: "You shall not pass!" });
     if (bcrypt.compareSync(password, user.password)) {
+      req.session.user = user;
       return res.status(200).json({ message: "Successfully logged in" });
     }
     return res.status(401).json({ error: "You shall not pass!" });
