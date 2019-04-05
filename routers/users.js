@@ -5,15 +5,9 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 
 const restricted = async (req, res, next) => {
-  const { username, password } = req.headers;
-  if (!username || !password)
-    return res.status(401).json({ error: "You shall not pass!" });
-  try {
-    const user = await db.findBy({ username }).first();
-    if (!user || !bcrypt.compareSync(password, user.password))
-      return res.status(403).json({ error: "You shall not pass!" });
+  if (req.session && req.session.user) {
     next();
-  } catch (error) {
+  } else {
     res
       .status(500)
       .json({ error: "Could not validate your login credentials" });
